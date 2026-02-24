@@ -590,7 +590,7 @@ function doConnect(){
   var room=$('inp-room').value.trim().toUpperCase();
   var srv=$('inp-server').value.trim()||'localhost:3000';
   $('conn-err').textContent='Connecting...';
-  try{ WS=new WebSocket('ws://'+srv); }
+  try{ var proto=srv.startsWith('localhost')||srv.startsWith('127.')||srv.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./)? 'ws':'wss'; WS=new WebSocket(proto+'://'+srv); }
   catch(e){ $('conn-err').textContent='Invalid address'; return; }
   WS.onopen=function(){ $('conn-err').textContent=''; WS.send(JSON.stringify({t:'join',name:name,room:room})); };
   WS.onerror=function(){ $('conn-err').textContent='Connection failed — is server.js running?'; };
